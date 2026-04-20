@@ -224,7 +224,7 @@ with st.sidebar:
     symbol = st.selectbox(f"幣種（{len(symbol_list)} 個有資料）",
                           symbol_list, index=default_idx)
 
-    use_live = st.toggle("即時數據（Binance API）", value=True)
+    use_live = st.toggle("即時數據（Bybit API）", value=True)
     auto_refresh = st.toggle("自動刷新", value=use_live)
     refresh_sec = st.select_slider(
         "刷新間隔（秒）", options=[10, 15, 20, 30, 60], value=15,
@@ -453,6 +453,10 @@ with tab_main:
         df, is_live = _prepare(symbol, timeframe, use_live)
     except FileNotFoundError as e:
         st.error(f"找不到資料檔案：{e}")
+        st.stop()
+    except Exception as e:
+        st.error(f"載入 {symbol} 資料失敗：{type(e).__name__}: {e}")
+        st.caption("常見原因：交易所 API 暫時無法連線、或該幣種在當前交易所無資料。")
         st.stop()
 
     latest = df.iloc[-1]
