@@ -1,0 +1,7 @@
+streamlit>=1.30
+streamlit-autorefresh
+plotly
+pandas>=2.0
+numpy
+ccxt
+backtesting==0.6.5
