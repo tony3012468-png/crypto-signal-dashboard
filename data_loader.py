@@ -11,14 +11,14 @@ _FILE_RE = re.compile(r"^([A-Z0-9]+)_USDT_USDT_(\d+[mhd])_(\d+)d\.csv$")
 
 
 def _exchange():
-    return ccxt.bybit({
+    return ccxt.binance({
         "enableRateLimit": True,
-        "options": {"defaultType": "swap"},
+        "options": {"defaultType": "future"},
     })
 
 
 def _fetch_klines_api(symbol: str, timeframe: str, limit: int) -> pd.DataFrame:
-    """Fetch historical K-lines from Bybit USDT perpetual."""
+    """Fetch historical K-lines from Binance USDT-M futures."""
     ex = _exchange()
     market = f"{symbol}/USDT:USDT"
     try:
@@ -36,7 +36,7 @@ def _fetch_klines_api(symbol: str, timeframe: str, limit: int) -> pd.DataFrame:
 
 
 def _fetch_funding_api(symbol: str, limit: int = CLOUD_FUNDING_LIMIT) -> pd.DataFrame:
-    """Fetch funding rate history from Bybit."""
+    """Fetch funding rate history from Binance."""
     ex = _exchange()
     market = f"{symbol}/USDT:USDT"
     try:
@@ -88,7 +88,7 @@ def load_klines(symbol: str, timeframe: str, days: int | None = None) -> pd.Data
         df = _fetch_klines_api(symbol, timeframe, limit=limit)
         if df.empty:
             raise FileNotFoundError(
-                f"Bybit API returned no data for {symbol} {timeframe}"
+                f"Binance API returned no data for {symbol} {timeframe}"
             )
         return df
 

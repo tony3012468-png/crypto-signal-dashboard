@@ -8,11 +8,11 @@ _TF_MS = {"1m": 60_000, "5m": 300_000, "15m": 900_000, "1h": 3_600_000, "4h": 14
 
 
 def _exchange():
-    return ccxt.bybit({"enableRateLimit": True, "options": {"defaultType": "swap"}})
+    return ccxt.binance({"enableRateLimit": True, "options": {"defaultType": "future"}})
 
 
 def fetch_recent(symbol: str, timeframe: str, limit: int = 200) -> pd.DataFrame:
-    """Fetch latest N candles from Bybit USDT perpetual."""
+    """Fetch latest N candles from Binance USDT-M futures."""
     ex = _exchange()
     market = f"{symbol}/USDT:USDT"
     try:
@@ -29,9 +29,9 @@ def fetch_recent(symbol: str, timeframe: str, limit: int = 200) -> pd.DataFrame:
 
 
 def load_with_live(symbol: str, timeframe: str, live_limit: int = 200) -> tuple[pd.DataFrame, bool]:
-    """Load historical CSV and append latest candles from Bybit.
+    """Load historical CSV and append latest candles from Binance.
 
-    Returns (df, is_live). is_live=False if Bybit fetch failed.
+    Returns (df, is_live). is_live=False if Binance fetch failed.
     """
     hist = load_klines(symbol, timeframe)
     try:
